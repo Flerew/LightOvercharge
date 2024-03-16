@@ -2,12 +2,10 @@
 using Exiled.API.Features;
 using CommandSystem;
 using Exiled.API.Enums;
-using MEC;
-using System.Collections.Generic;
 
 namespace LightOvercharge.Commands
 {
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    [CommandHandler(typeof(ClientCommandHandler))]
     internal sealed class Overcharge : ICommand
     {
         public string Command { get; } = "blackout";
@@ -20,19 +18,27 @@ namespace LightOvercharge.Commands
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            RoomType senderRoom = GetSenderLocation(sender);
-            if(senderRoom == RoomType.EzIntercom)
+            if (arguments.Count > 0)
             {
-                string selectedZone = arguments.Array[1];
+                RoomType senderRoom = GetSenderLocation(sender);
+                if (senderRoom == RoomType.EzIntercom)
+                {
+                    string selectedZone = arguments.Array[1];
 
-                ZoneType zone = SelectedBlackoutZone(selectedZone);
-                BlackoutZone(zone, config.Duration);
-                response = string.Empty;
-                return true;
+                    ZoneType zone = SelectedBlackoutZone(selectedZone);
+                    BlackoutZone(zone, config.Duration);
+                    response = string.Empty;
+                    return true;
+                }
+                else
+                {
+                    response = config.ErrorSenderLocation;
+                    return false;
+                }
             }
             else
             {
-                response = config.ErrorSenderLocation;
+                response = config.ErrorArgumentsExeption;
                 return false;
             }
         }
@@ -40,7 +46,7 @@ namespace LightOvercharge.Commands
         private void BlackoutZone(ZoneType zone, float duration)
         {
             Map.TurnOffAllLights(config.Duration, zone);
-            Cassie.MessageTranslated("Light off", "Light off");
+            Cassie.MessageTranslated(config.CassieMassage, config.CassieMassage);
         }
 
         private RoomType GetSenderLocation(ICommandSender sender)

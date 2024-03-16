@@ -7,13 +7,11 @@ namespace LightOvercharge
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; }
-        public float Duration { get; set; } = 5f;
+        public float Duration { get; set; } = 15f;
+
+        public string CassieMassage { get; set; } = "Facility has entered the emergency power mode";
 
         public string ErrorSenderLocation { get; set; } = "You must be in the intercom to use this command";
-
-        public bool isLightZoneLightsOn = true;
-        public bool isHardZoneLightsOn = true;
-        public bool isEntranceZoneLightsOn = true;
-        public bool isSurfaceZoneLightsOn = true;
+        public string ErrorArgumentsExeption { get; set; } = "You must select zone(lz/hz/ez/srf)";
     }
 }
